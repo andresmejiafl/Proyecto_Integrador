@@ -70,3 +70,5 @@ def raw_vs_std(df,path,df_std):
     plt.title('Distribución de intensidad de pixeles en la imagen')
     plt.xlabel('Intensidad')
     plt.ylabel('# Pixeles')
+
+ 
