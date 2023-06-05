@@ -1,4 +1,4 @@
-from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import roc_auc_score, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
@@ -20,7 +20,7 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 	parametros: Diccionario de hiperparametros y valores
 	"""
 	print('******************************************************************** ')
-	print('Iniciando entrenamiento de modelos')
+	print('Iniciando busqueda de hiperparametros')
 	print('******************************************************************** ')
 	
 	random.seed(42)
@@ -53,12 +53,13 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 
 	dict_hpparams = {'lgbm':params_lgbm, 'rf':param_rf, 'xgb':param_xgb}
 
-	semilla = []; parameters = []; 
+	parameters = []; 
 	auc_train_l = []; auc_test_l = []; 
-	accuracy_train_l = []; accuracy_test_l = []     
+	accuracy_train_l = []; accuracy_test_l = []; 
 	precision_train_l = []; precision_test_l = []; 
 	recall_train_l = []; recall_test_l = []; 
 	f1_train_l = []; f1_test_l = [];	
+	matrix_train_l = []; matrix_test_l = []; 
 	typemodel_l = []
 
 	for i in range(n_iter):
@@ -96,35 +97,39 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 					)
 					typemodel = 'RandomForest'
 
-				else :
+				elif key == 'xgb' :
 					hyperparameters = {k: random.sample(v, 1)[0] for k, v in dict_hpparams[key].items()}
 					model1 = xgb.XGBClassifier(
 					learning_rate = hyperparameters['learning_rate'],
 					n_estimators = hyperparameters['n_estimators'],
 					max_depth = hyperparameters['max_depth'],
-					min_child_weight = hyperparameters['min_data_in_leaf'],
+					# min_child_weight = hyperparameters['min_data_in_leaf'],
 					n_jobs = -3,
-					verbose = -1,
 					seed = 42
 					)
 					typemodel = 'XGBoost'
 
-				model1.fit(X_train, np.ravel(y_train))
+				model1.fit(X_train, y_train)
+
+				y_prob_train = model1.predict_proba(X_train)
+				y_prob_test  = model1.predict_proba(X_test)
 
 				y_pred_train = model1.predict(X_train)
 				y_pred_test  = model1.predict(X_test)
 
-				auc_train = roc_auc_score(y_train, y_pred_train)
+				auc_train = roc_auc_score(y_train, y_prob_train, multi_class = 'ovr')
 				accuracy_train = accuracy_score(y_train, y_pred_train)
-				precision_train = precision_score(y_train, y_pred_train)
-				recall_train = recall_score(y_train, y_pred_train)
-				f1_train = f1_score(y_train, y_pred_train)
+				precision_train = precision_score(y_train, y_pred_train, average = 'macro')
+				recall_train = recall_score(y_train, y_pred_train, average = 'macro')
+				f1_train = f1_score(y_train, y_pred_train, average = 'macro')
+				matrix_train = confusion_matrix(y_train, y_pred_train)
 
-				auc_test = roc_auc_score(y_test, y_pred_test)
+				auc_test = roc_auc_score(y_test, y_prob_test, multi_class = 'ovr')
 				accuracy_test = accuracy_score(y_test, y_pred_test)
-				precision_test = precision_score(y_test, y_pred_test)
-				recall_test = recall_score(y_test, y_pred_test)
-				f1_test = f1_score(y_test, y_pred_test)
+				precision_test = precision_score(y_test, y_pred_test, average = 'macro')
+				recall_test = recall_score(y_test, y_pred_test, average = 'macro')
+				f1_test = f1_score(y_test, y_pred_test, average = 'macro')
+				matrix_test = confusion_matrix(y_test, y_pred_test)
 
 				auc_train_l.append(auc_train)
 				auc_test_l.append(auc_test)
@@ -136,6 +141,9 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 				recall_test_l.append(recall_test)
 				f1_train_l.append(f1_train)
 				f1_test_l.append(f1_test)
+				matrix_train_l.append(matrix_train)
+				matrix_test_l.append(matrix_test)
+
 				typemodel_l.append(typemodel)
 				parameters.append(hyperparameters)
 
@@ -150,13 +158,19 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 		'precision_tr' : precision_train_l,
 		'recall_tr'	   : recall_train_l,
 		'f1_tr'		   : f1_train_l,
-		'auc_te'	   : auc_train_l, 
-		'accuracy_te'  : accuracy_train_l,
-		'precision_te' : precision_train_l,
-		'recall_te'	   : recall_train_l,
-		'f1_te'		   : f1_train_l
+		'Matriz_tr'    : matrix_train_l,
+		'auc_te'	   : auc_test_l, 
+		'accuracy_te'  : accuracy_test_l,
+		'precision_te' : precision_test_l,
+		'recall_te'	   : recall_test_l,
+		'f1_te'		   : f1_test_l,
+		'Matriz_te'    : matrix_test_l
 	}
 
 	res_df = pd.DataFrame.from_dict(resultados)
+
+	print('******************************************************************** ')
+	print('Finalizando busqueda de hiperparametros')
+	print('******************************************************************** ')
 
 	return res_df

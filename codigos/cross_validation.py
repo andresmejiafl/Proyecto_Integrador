@@ -3,7 +3,6 @@ from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from lightgbm import LGBMClassifier
 from xgboost import XGBClassifier
-from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.naive_bayes import GaussianNB
 import pandas as pd
 import numpy as np
@@ -60,7 +59,7 @@ def compare_models(X,y,k):
     df_results = pd.DataFrame(results)
 
     print('******************************************************************** ')
-    print('Compare models finished')
+    print('Finalizando torneo de modelos con validación cruzada')
     print('******************************************************************** ')
 
     return df_results

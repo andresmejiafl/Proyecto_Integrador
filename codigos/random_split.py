@@ -1,8 +1,18 @@
+from shutil import copyfile
 import os
 import random
-from shutil import copyfile
 
 def random_split(dir_img,dir_train,dir_test,train_size):
+    """
+    Esta función divide la base de datos de imagenes en
+    train y test de forma aleatoria, separandola por carpetas.
+    Tiene como parametros las rutas de los directorios de las
+    imagenes, directorio train, directorio test y porcentaje 
+    de entrenamiento.    
+    """
+    print('******************************************************************** ')
+    print('Iniciando división del conjunto de datos')
+    print('******************************************************************** ')
 
     directorio_imagenes = dir_img
     proporcion_entrenamiento = train_size  
@@ -29,4 +39,6 @@ def random_split(dir_img,dir_train,dir_test,train_size):
         destino = os.path.join(directorio_prueba, archivo)
         copyfile(origen, destino)
     
-    print("====================================================================")
+    print('******************************************************************** ')
+    print('Finalizando división del conjunto de datos')
+    print('******************************************************************** ')
