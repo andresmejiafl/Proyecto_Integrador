@@ -47,7 +47,6 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 	param_xgb = {
 		'n_estimators'	   : estimadores,
 		'max_depth'		   : profundidad,
-		'min_child_weight' : min_data_le,
 		'learning_rate'	   : learning_ra
 	}
 
@@ -103,7 +102,6 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 					learning_rate = hyperparameters['learning_rate'],
 					n_estimators = hyperparameters['n_estimators'],
 					max_depth = hyperparameters['max_depth'],
-					# min_child_weight = hyperparameters['min_data_in_leaf'],
 					n_jobs = -3,
 					seed = 42
 					)
