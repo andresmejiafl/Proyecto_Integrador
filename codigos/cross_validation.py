@@ -29,7 +29,7 @@ def compare_models(X,y,k):
         'XGBoost': XGBClassifier(tree_method = 'gpu_hist', gpu_id = 0)
     }
 
-    metrics = ['accuracy', 'precision_macro', 'recall_macro', 'f1_macro', 'roc_auc_ovr']
+    metrics = ['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
 
     results = []
 
@@ -45,15 +45,15 @@ def compare_models(X,y,k):
         results.append({
             'Model': model_name,
             'Train Accuracy': train_results['accuracy'],
-            'Train precision_macro': train_results['precision_macro'],
-            'Train recall_macro': train_results['recall_macro'],
-            'Train f1_macro': train_results['f1_macro'],
-            'Train AUC-ROC': train_results['roc_auc_ovr'],
+            'Train precision': train_results['precision'],
+            'Train recall': train_results['recall'],
+            'Train f1': train_results['f1'],
+            'Train AUC-ROC': train_results['roc_auc'],
             'Test Accuracy': test_results['accuracy'],
-            'Test precision_macro': test_results['precision_macro'],
-            'Test recall_macro': test_results['recall_macro'],
-            'Test f1_macro': test_results['f1_macro'],
-            'Test AUC-ROC': test_results['roc_auc_ovr']
+            'Test precision': test_results['precision'],
+            'Test recall': test_results['recall'],
+            'Test f1': test_results['f1'],
+            'Test AUC-ROC': test_results['roc_auc']
         })
 
     df_results = pd.DataFrame(results)

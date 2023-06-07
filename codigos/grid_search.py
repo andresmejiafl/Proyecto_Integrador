@@ -109,24 +109,25 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 
 				model1.fit(X_train, y_train)
 
-				y_prob_train = model1.predict_proba(X_train)
-				y_prob_test  = model1.predict_proba(X_test)
+				y_prob_train = model1.predict_proba(X_train)[:,1]
+				y_prob_test  = model1.predict_proba(X_test)[:,1]
 
 				y_pred_train = model1.predict(X_train)
 				y_pred_test  = model1.predict(X_test)
 
-				auc_train = roc_auc_score(y_train, y_prob_train, multi_class = 'ovr')
+				auc_train = roc_auc_score(y_train, y_prob_train)
+
 				accuracy_train = accuracy_score(y_train, y_pred_train)
-				precision_train = precision_score(y_train, y_pred_train, average = 'macro')
-				recall_train = recall_score(y_train, y_pred_train, average = 'macro')
-				f1_train = f1_score(y_train, y_pred_train, average = 'macro')
+				precision_train = precision_score(y_train, y_pred_train)
+				recall_train = recall_score(y_train, y_pred_train)
+				f1_train = f1_score(y_train, y_pred_train)
 				matrix_train = confusion_matrix(y_train, y_pred_train)
 
-				auc_test = roc_auc_score(y_test, y_prob_test, multi_class = 'ovr')
+				auc_test = roc_auc_score(y_test, y_prob_test)
 				accuracy_test = accuracy_score(y_test, y_pred_test)
-				precision_test = precision_score(y_test, y_pred_test, average = 'macro')
-				recall_test = recall_score(y_test, y_pred_test, average = 'macro')
-				f1_test = f1_score(y_test, y_pred_test, average = 'macro')
+				precision_test = precision_score(y_test, y_pred_test)
+				recall_test = recall_score(y_test, y_pred_test)
+				f1_test = f1_score(y_test, y_pred_test)
 				matrix_test = confusion_matrix(y_test, y_pred_test)
 
 				auc_train_l.append(auc_train)
