@@ -25,17 +25,17 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 	
 	random.seed(42)
 
-	learning_ra = parametros['learning_ra']
+	# learning_ra = parametros['learning_ra']
 	estimadores = parametros['estimadores']
 	profundidad = parametros['profundidad']
 	min_data_le = parametros['min_data_le']
 
-	params_lgbm = {
-		'n_estimators'     : estimadores,
-		'max_depth'        : profundidad,
-		'min_data_in_leaf' : min_data_le,
-		'learning_rate'    : learning_ra
-	}
+	# params_lgbm = {
+	# 	'n_estimators'     : estimadores,
+	# 	'max_depth'        : profundidad,
+	# 	'min_data_in_leaf' : min_data_le,
+	# 	'learning_rate'    : learning_ra
+	# }
 
 	param_rf = {
 		'n_estimators'     : estimadores,
@@ -44,13 +44,15 @@ def train_models(X_train, y_train, X_test, y_test, n_iter, parametros):
 		'criterion'        : ['gini', 'entropy']
 	}
 
-	param_xgb = {
-		'n_estimators'	   : estimadores,
-		'max_depth'		   : profundidad,
-		'learning_rate'	   : learning_ra
-	}
+	# param_xgb = {
+	# 	'n_estimators'	   : estimadores,
+	# 	'max_depth'		   : profundidad,
+	# 	'learning_rate'	   : learning_ra
+	# }
 
-	dict_hpparams = {'lgbm':params_lgbm, 'rf':param_rf, 'xgb':param_xgb}
+	# dict_hpparams = {'lgbm':params_lgbm, 'rf':param_rf, 'xgb':param_xgb}
+	dict_hpparams = {'rf':param_rf}
+
 
 	parameters = []; 
 	auc_train_l = []; auc_test_l = []; 
